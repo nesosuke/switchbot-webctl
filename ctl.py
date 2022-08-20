@@ -10,8 +10,8 @@ def create_token_file():
     create config.txt if not exists
     '''
     if not os.path.exists("./token.txt"):
-        with open("./token.txt", "w", encoding="utf-8") as f:
-            f.write("")
+        with open("./token.txt", "w", encoding="utf-8") as out_f:
+            out_f.write("")
     else:
         pass
 
@@ -20,16 +20,16 @@ def store_token(token):
     '''
     store token into config.txt
     '''
-    with open("./token.txt", "w", encoding="utf-8") as f:
-        f.write(token)
+    with open("./token.txt", "w", encoding="utf-8") as out_f:
+        out_f.write(token)
 
 
 def get_token():
     '''
     get token from config.txt
     '''
-    with open("./token.txt", "r", encoding="utf-8") as f:
-        token = f.read()
+    with open("./token.txt", "r", encoding="utf-8") as in_f:
+        token = in_f.read()
         token = str(token).strip()
     return token
 
