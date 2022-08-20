@@ -2,7 +2,31 @@ import json
 import os
 import requests
 
-API_URL = "https://api.switch-bot.com"
+REFERENCE_URL = '''
+GitHub: https://github.com/OpenWonderLabs/SwitchBotAPI/blob/549798907aeff0504135a3f087affc63657d0207/README.md
+'''
+
+API_URL = "https://api.switch-bot.com/v1.0"
+
+physical_device_list = [
+    'Hub',
+    'Hub Plus',
+    'Hub Mini',
+    'Bot', 'Curtain',
+    'Plug',
+    'Meter',
+    'Motion Sensor',
+    'Contact Sensor',
+    'Color Bulb',
+    'Humidifier',
+    'Smart Fan',
+    'Strip Light',
+    'Plug Mini (US)',
+    'Plug Mini (JP)',
+    'Lock',
+    'Meter Plus (JP)',
+    'Meter Plus (US)',
+]
 
 
 def create_token_file():
