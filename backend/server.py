@@ -45,4 +45,3 @@ async def send_command(device_id: str, command: str) -> dict:
 
     # result = ctl.send_command(device_id, command)
     return result
-

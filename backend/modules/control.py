@@ -68,6 +68,7 @@ HEADERS = {
     'Authorization': OPEN_TOKEN,
     'Content-Type': 'application/json; charset=utf-8'
 }
+ENDPOINT_FETCH_STATUS= '/devices/{device_id}/status'
 ENDPOINT_SEND_COMMAND= '/devices/{device_id}/command'
 
 
@@ -101,7 +102,7 @@ def fetch_device_status(device_id: str) -> json:
     '''
     fetch device status from switch bot api
     '''
-    url = f'{API_URL}/devices/{device_id}/status'
+    url = f'{API_URL}{ENDPOINT_FETCH_STATUS.format(device_id=device_id)}'
     res = requests.get(url, headers=HEADERS)
 
     return solve_http_status(res.json())
