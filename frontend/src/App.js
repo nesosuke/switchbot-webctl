@@ -6,15 +6,11 @@ function App() {
       <div>
         <h1>Get Device List</h1>
         {/* <input type="text" id="apiToken" placeholder="Enter API token" /> */}
-        <input
-          type="button"
-          value="Get Device List"
-          onClick={insertDOMDeviceList}
-        />
+        <input type="button" value="Get Device List" onClick={showDeviceList} />
       </div>
       <div>
         <h2>Device List</h2>
-        <p id="deviceList"></p>
+        <p id="deviceListTable"></p>
 
         <h2>Remote Control</h2>
         <p id="remoteControl"></p>
@@ -33,60 +29,67 @@ async function fetchDeviceList() {
 }
 
 // create device list table from data
-async function insertDOMDeviceList(data) {
-  let deviceList = await fetchDeviceList();
+async function showDeviceList() {
+  let response = await fetchDeviceList();
 
-  // iterate through the device list and create a table
-  // devicelist = { "deviceList": [
-  //  { "deviceId": "0",
-  //    "deviceName": "device0",
-  //    "deviceType": "Hub",
-  //    "hubDeviceId": "0000000"},
-  //  { "deviceId": "1",
-  //    "deviceName": "device1",
-  //    "deviceType": "switch",
-  //    "hubDeviceId": "0"}
-  //  ]}
+  // initialize device list table, delete existing table if exists
+  document.getElementById("deviceListTable").innerHTML = "";
+
+  let deviceListTable = document.createElement("table");
 
   // create table header
-  let table = document.createElement("table");
-  let tableHeader = document.createElement("thead");
-  let tableHeaderRow = document.createElement("tr");
-  let tableHeaderRowCell = document.createElement("th");
-  tableHeaderRowCell.innerHTML = "Device Id";
-  tableHeaderRow.appendChild(tableHeaderRowCell);
-  tableHeaderRowCell = document.createElement("th");
-  tableHeaderRowCell.innerHTML = "Device Name";
-  tableHeaderRow.appendChild(tableHeaderRowCell);
-  tableHeaderRowCell = document.createElement("th");
-  tableHeaderRowCell.innerHTML = "Device Type";
-  tableHeaderRow.appendChild(tableHeaderRowCell);
-  tableHeaderRowCell = document.createElement("th");
-  tableHeaderRowCell.innerHTML = "Hub Device Id";
-  tableHeaderRow.appendChild(tableHeaderRowCell);
-  tableHeader.appendChild(tableHeaderRow);
-  table.appendChild(tableHeader);
-  // create table body
-  let tableBody = document.createElement("tbody");
-  for (let i = 0; i < deviceList.deviceList.length; i++) {
-    let tableBodyRow = document.createElement("tr");
-    let tableBodyRowCell = document.createElement("td");
-    tableBodyRowCell.innerHTML = deviceList.deviceList[i].deviceId;
-    tableBodyRow.appendChild(tableBodyRowCell);
-    tableBodyRowCell = document.createElement("td");
-    tableBodyRowCell.innerHTML = deviceList.deviceList[i].deviceName;
-    tableBodyRow.appendChild(tableBodyRowCell);
-    tableBodyRowCell = document.createElement("td");
-    tableBodyRowCell.innerHTML = deviceList.deviceList[i].deviceType;
-    tableBodyRow.appendChild(tableBodyRowCell);
-    tableBodyRowCell = document.createElement("td");
-    tableBodyRowCell.innerHTML = deviceList.deviceList[i].hubDeviceId;
-    tableBodyRow.appendChild(tableBodyRowCell);
-    tableBody.appendChild(tableBodyRow);
+  let header = document.createElement("tr");
+  let headerDeviceId = document.createElement("th");
+  headerDeviceId.innerHTML = "Device ID";
+  header.appendChild(headerDeviceId);
+  let headerDeviceName = document.createElement("th");
+  headerDeviceName.innerHTML = "Device Name";
+  header.appendChild(headerDeviceName);
+  let headerDeviceType = document.createElement("th");
+  headerDeviceType.innerHTML = "Device Type";
+  header.appendChild(headerDeviceType);
+  let headerHubDeviceId = document.createElement("th");
+  headerHubDeviceId.innerHTML = "Hub Device ID";
+  header.appendChild(headerHubDeviceId);
+
+  deviceListTable.appendChild(header);
+
+  for (let i = 0; i < response.deviceList.length; i++) {
+    let row = document.createElement("tr");
+    let deviceId = document.createElement("td");
+    deviceId.innerHTML = response.deviceList[i].deviceId;
+    row.appendChild(deviceId);
+    let deviceName = document.createElement("td");
+    deviceName.innerHTML = response.deviceList[i].deviceName;
+    row.appendChild(deviceName);
+    let deviceType = document.createElement("td");
+    deviceType.innerHTML = response.deviceList[i].deviceType;
+    row.appendChild(deviceType);
+    let hubDeviceId = document.createElement("td");
+    hubDeviceId.innerHTML = response.deviceList[i].hubDeviceId;
+    row.appendChild(hubDeviceId);
+    deviceListTable.appendChild(row);
+  }
+  // append virtual remote device
+  for (let i = 0; i < response.infraredRemoteList.length; i++) {
+    let row = document.createElement("tr");
+    let deviceId = document.createElement("td");
+    deviceId.innerHTML = response.infraredRemoteList[i].deviceId;
+    row.appendChild(deviceId);
+    let deviceName = document.createElement("td");
+    deviceName.innerHTML = response.infraredRemoteList[i].deviceName;
+    row.appendChild(deviceName);
+    let remoteType = document.createElement("td");
+    remoteType.innerHTML = response.infraredRemoteList[i].remoteType;
+    row.appendChild(remoteType);
+    let hubDeviceId = document.createElement("td");
+    hubDeviceId.innerHTML = response.infraredRemoteList[i].hubDeviceId;
+    row.appendChild(hubDeviceId);
+    deviceListTable.appendChild(row);
   }
 
-  table.appendChild(tableBody);
-  document.getElementById("deviceList").appendChild(table);
+  // append device list table to the page
+  document.getElementById("deviceListTable").appendChild(deviceListTable);
 }
 
 export default App;
