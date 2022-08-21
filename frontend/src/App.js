@@ -1,77 +1,120 @@
 import "./App.css";
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-
 function App() {
   return (
     <>
       <div>
         <h1>Get Device List</h1>
-        <input type="text" id="apiToken" placeholder="Enter API token" />
-        <input type="button" value="Get Device List" onClick={showDeviceList} />
+        {/* <input type="text" id="apiToken" placeholder="Enter API token" /> */}
+        <input
+          type="button"
+          value="Get Device List"
+          onClick={insertDOMDeviceList}
+        />
       </div>
       <div>
         <h2>Device List</h2>
         <p id="deviceList"></p>
-        <p id="header"></p>
       </div>
     </>
   );
 }
 
-const switchBotApiDomain = "https://api.switch-bot.com/v1.0";
-
-// function: get the api token inputted in the text form
-function getApiToken() {
-  const apiToken = document.getElementById("apiToken").value;
-  if (apiToken === "") {
-    alert("Error: Input your API token.");
-    return "Error";
-  } else {
-    return apiToken;
-  }
-}
+const localServerDomain = "http://localhost:8000";
 
 // function: fetch the device list from switch bot Api with apiToken
-function showDeviceList(apiToken) {
-  let data = fetchDeviceList(apiToken);
-  document.getElementById("deviceList").innerHTML = JSON.stringify(data);
+// async function showDeviceList() {
+//   let data = await fetchDeviceList();
+//   // let data = await  func_test(); // debug
+//   console.log(data); // "Hello World" // DEBUG
+//   document.getElementById("deviceList").innerHTML = JSON.stringify(data);
+// }
+
+// async function func_test() {
+//   let url = localServerDomain;
+//   let data = await fetch(url).then((response) => response.json());
+//   return data;
+// }
+
+async function fetchDeviceList() {
+  let url = localServerDomain + "/devices";
+  let data = await fetch(url).then((response) => response.json());
+  console.log(data);
+  return data;
 }
 
-function fetchDeviceList(apiToken) {
-  let url = switchBotApiDomain + "/devices";
-  if (getApiToken() !== "Error") {
-    const header = {
-      Authorization: getApiToken(),
-      "Content-Type": "application/json; charset=utf8",
-    };
-    fetch(url, { headers: header })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });
+// create device list table from data
+async function insertDOMDeviceList(data) {
+  let deviceList = await fetchDeviceList();
+
+  // iterate through the device list and create a table
+  // devicelist = { "deviceList": [
+  //  { "deviceId": "0",
+  //    "deviceName": "device0",
+  //    "deviceType": "Hub",
+  //    "hubDeviceId": "0000000"},
+  //  { "deviceId": "1",
+  //    "deviceName": "device1",
+  //    "deviceType": "switch",
+  //    "hubDeviceId": "0"}
+  //  ]}
+
+  // create table header
+  let table = document.createElement("table");
+  let tableHeader = document.createElement("thead");
+  let tableHeaderRow = document.createElement("tr");
+  let tableHeaderRowCell = document.createElement("th");
+  tableHeaderRowCell.innerHTML = "Device Id";
+  tableHeaderRow.appendChild(tableHeaderRowCell);
+  tableHeaderRowCell = document.createElement("th");
+  tableHeaderRowCell.innerHTML = "Device Name";
+  tableHeaderRow.appendChild(tableHeaderRowCell);
+  tableHeaderRowCell = document.createElement("th");
+  tableHeaderRowCell.innerHTML = "Device Type";
+  tableHeaderRow.appendChild(tableHeaderRowCell);
+  tableHeaderRowCell = document.createElement("th");
+  tableHeaderRowCell.innerHTML = "Hub Device Id";
+  tableHeaderRow.appendChild(tableHeaderRowCell);
+  tableHeader.appendChild(tableHeaderRow);
+  table.appendChild(tableHeader);
+  // create table body
+  let tableBody = document.createElement("tbody");
+  for (let i = 0; i < deviceList.deviceList.length; i++) {
+    let tableBodyRow = document.createElement("tr");
+    let tableBodyRowCell = document.createElement("td");
+    tableBodyRowCell.innerHTML = deviceList.deviceList[i].deviceId;
+    tableBodyRow.appendChild(tableBodyRowCell);
+    tableBodyRowCell = document.createElement("td");
+    tableBodyRowCell.innerHTML = deviceList.deviceList[i].deviceName;
+    tableBodyRow.appendChild(tableBodyRowCell);
+    tableBodyRowCell = document.createElement("td");
+    tableBodyRowCell.innerHTML = deviceList.deviceList[i].deviceType;
+    tableBodyRow.appendChild(tableBodyRowCell);
+    tableBodyRowCell = document.createElement("td");
+    tableBodyRowCell.innerHTML = deviceList.deviceList[i].hubDeviceId;
+    tableBodyRow.appendChild(tableBodyRowCell);
+    tableBody.appendChild(tableBodyRow);
   }
+
+  for (let i = 0; i < deviceList.infraredRemoteList.length; i++) {
+    let tableBodyRow = document.createElement("tr");
+    let tableBodyRowCell = document.createElement("td");
+    tableBodyRowCell.innerHTML = deviceList.infraredRemoteList[i].deviceId;
+    tableBodyRow.appendChild(tableBodyRowCell);
+    tableBodyRowCell = document.createElement("td");
+    tableBodyRowCell.innerHTML = deviceList.infraredRemoteList[i].deviceName;
+    tableBodyRow.appendChild(tableBodyRowCell);
+    tableBodyRowCell = document.createElement("td");
+    tableBodyRowCell.innerHTML = deviceList.infraredRemoteList[i].remoteType;
+    tableBodyRow.appendChild(tableBodyRowCell);
+    tableBodyRowCell = document.createElement("td");
+    tableBodyRowCell.innerHTML = deviceList.infraredRemoteList[i].hubDeviceId;
+    tableBodyRow.appendChild(tableBodyRowCell);
+    tableBody.appendChild(tableBodyRow);
+  }
+
+  table.appendChild(tableBody);
+  document.getElementById("deviceList").appendChild(table);
 }
 
 export default App;
