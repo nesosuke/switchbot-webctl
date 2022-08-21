@@ -68,6 +68,7 @@ HEADERS = {
     'Authorization': OPEN_TOKEN,
     'Content-Type': 'application/json; charset=utf-8'
 }
+ENDPOINT_SEND_COMMAND= '/devices/{device_id}/command'
 
 
 def solve_http_status(response: dict) -> dict:
@@ -102,5 +103,17 @@ def fetch_device_status(device_id: str) -> json:
     '''
     url = f'{API_URL}/devices/{device_id}/status'
     res = requests.get(url, headers=HEADERS)
+
+    return solve_http_status(res.json())
+
+def send_command(device_id: str, command: str) -> json:
+    '''
+    send command to switch bot api
+    '''
+    url = f'{API_URL}{ENDPOINT_SEND_COMMAND.format(device_id=device_id)}'
+    data = {
+        "command": command
+    }
+    res = requests.post(url, headers=HEADERS, json=data)
 
     return solve_http_status(res.json())

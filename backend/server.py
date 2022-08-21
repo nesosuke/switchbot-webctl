@@ -32,3 +32,17 @@ def get_device_list() -> list:
 async def get_device_status(device_id: str) -> dict:
     device_status = ctl.fetch_device_status(device_id)  # TODO
     return device_status
+
+
+@app.post("/devices/{device_id}/command")
+async def send_command(device_id: str, command: str) -> dict:
+
+    # for debug
+    result = f'''
+    [DEBUG] device_id: {device_id}
+    command: {command}
+    '''
+
+    # result = ctl.send_command(device_id, command)
+    return result
+

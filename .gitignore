@@ -191,5 +191,4 @@ yarn-error.log*
 
 # Config file including secrets token and other sensitive data for debugging purposes
 token.txt
-device_list.json
-device_status.json
+*.json

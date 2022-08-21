@@ -15,26 +15,15 @@ function App() {
       <div>
         <h2>Device List</h2>
         <p id="deviceList"></p>
+
+        <h2>Remote Control</h2>
+        <p id="remoteControl"></p>
       </div>
     </>
   );
 }
 
 const localServerDomain = "http://localhost:8000";
-
-// function: fetch the device list from switch bot Api with apiToken
-// async function showDeviceList() {
-//   let data = await fetchDeviceList();
-//   // let data = await  func_test(); // debug
-//   console.log(data); // "Hello World" // DEBUG
-//   document.getElementById("deviceList").innerHTML = JSON.stringify(data);
-// }
-
-// async function func_test() {
-//   let url = localServerDomain;
-//   let data = await fetch(url).then((response) => response.json());
-//   return data;
-// }
 
 async function fetchDeviceList() {
   let url = localServerDomain + "/devices";
@@ -92,23 +81,6 @@ async function insertDOMDeviceList(data) {
     tableBodyRow.appendChild(tableBodyRowCell);
     tableBodyRowCell = document.createElement("td");
     tableBodyRowCell.innerHTML = deviceList.deviceList[i].hubDeviceId;
-    tableBodyRow.appendChild(tableBodyRowCell);
-    tableBody.appendChild(tableBodyRow);
-  }
-
-  for (let i = 0; i < deviceList.infraredRemoteList.length; i++) {
-    let tableBodyRow = document.createElement("tr");
-    let tableBodyRowCell = document.createElement("td");
-    tableBodyRowCell.innerHTML = deviceList.infraredRemoteList[i].deviceId;
-    tableBodyRow.appendChild(tableBodyRowCell);
-    tableBodyRowCell = document.createElement("td");
-    tableBodyRowCell.innerHTML = deviceList.infraredRemoteList[i].deviceName;
-    tableBodyRow.appendChild(tableBodyRowCell);
-    tableBodyRowCell = document.createElement("td");
-    tableBodyRowCell.innerHTML = deviceList.infraredRemoteList[i].remoteType;
-    tableBodyRow.appendChild(tableBodyRowCell);
-    tableBodyRowCell = document.createElement("td");
-    tableBodyRowCell.innerHTML = deviceList.infraredRemoteList[i].hubDeviceId;
     tableBodyRow.appendChild(tableBodyRowCell);
     tableBody.appendChild(tableBodyRow);
   }
